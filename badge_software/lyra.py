@@ -6,6 +6,22 @@ from bsides25_shared import *
 
 def led_eff_trans(np, oldstate, **kwargs):
     """Rainbow running around the circle"""
+    pos = (oldstate or 0) % (360*4)
+    blue = hsv_to_rgb(160, 1, kwargs["led_brightness"].value/100)
+    pink = hsv_to_rgb(310, 1, kwargs["led_brightness"].value/100)
+    white = hsv_to_rgb(0, 0, kwargs["led_brightness"].value/100*0.9)
+    stuff = [blue,pink,white,pink,blue]
+    prev_color = stuff[int(pos/360)]
+    next_color = stuff[int(pos/360)+1]
+    for i in range(len(np)):
+         np[i] = next_color if (pos%360)/360*len(np) < i else prev_color
+    #    np[i] = [blue,pink,pink,white,white,pink,pink,blue,blue,pink,pink,white,white,pink,pink,blue][i]
+    #    pixel_hue = ((i * 360 // len(np)) + pos) % 360
+    #    np[i] = hsv_to_rgb(pixel_hue, kwargs["led_sat"].value/100, kwargs["led_brightness"].value/100)
+    return (pos + kwargs["led_speed"].value/10)
+
+def led_eff_trans_static(np, oldstate, **kwargs):
+    """Rainbow running around the circle"""
     #pos = oldstate or 0
     blue = hsv_to_rgb(160, 1, kwargs["led_brightness"].value/100)
     pink = hsv_to_rgb(310, 1, kwargs["led_brightness"].value/100)
